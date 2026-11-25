@@ -1,0 +1,55 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-cream: #F5F0E8;
+    --surface-beige: #E9E0D3;
+    --text-primary: #25221E;
+    --text-secondary: #756D63;
+    --accent-caramel: #B49772;
+    --border-subtle: #D8CFC2;
+  }
+
+  html {
+    background-color: #F5F0E8;
+    color: #25221E;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  body {
+    background-color: #F5F0E8;
+    color: #25221E;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Editorial typography refinements */
+  h1, h2, h3, h4, .font-serif {
+    font-feature-settings: "liga" 1, "dlig" 1;
+    text-rendering: optimizeLegibility;
+  }
+}
+
+/* Subtle tactile paper / film grain overlay */
+.paper-grain {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
+}
+
+/* Subtle editorial grid lines */
+.editorial-grid {
+  background-size: 64px 64px;
+  background-image: 
+    linear-gradient(to right, rgba(216, 207, 194, 0.25) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(216, 207, 194, 0.25) 1px, transparent 1px);
+}
+
+/* Hide scrollbar for clean editorial look */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
