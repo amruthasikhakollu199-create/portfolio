@@ -14,21 +14,50 @@ export const About: React.FC = () => {
     "I'm still exploring, still learning, and always looking for the next thing worth building. " +
     "Curiosity starts it. Building takes it somewhere.";
 
+  // Function to find the sweetest natural female voice available in the browser
+  const getSweetFemaleVoice = (voices: SpeechSynthesisVoice[]): SpeechSynthesisVoice | null => {
+    // Priority order: Natural sweet/warm English female voices (Edge Natural voices, Google US/UK English, Apple Samantha/Victoria, Microsoft Zira/Jenny/Aria)
+    const sweetFemaleKeywords = [
+      'Jenny', 'Aria', 'Sonia', 'Ava', 'Emma', 'Ana', 'Mia', // Edge Natural / Neural
+      'Google US English', 'Google UK English Female', // Chrome high quality
+      'Samantha', 'Victoria', 'Karen', 'Moira', 'Tessa', // Apple / macOS / iOS
+      'Zira', 'Hazel', 'Susan', 'Heera', 'Neerja' // Windows / standard
+    ];
+
+    // 1. Try finding explicit sweet female names
+    for (const keyword of sweetFemaleKeywords) {
+      const match = voices.find(
+        (v) => v.name.includes(keyword) && v.lang.startsWith('en')
+      );
+      if (match) return match;
+    }
+
+    // 2. Try any voice labeled 'female' in English
+    const genericFemale = voices.find(
+      (v) => v.lang.startsWith('en') && (v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('woman'))
+    );
+    if (genericFemale) return genericFemale;
+
+    // 3. Fallback to any English voice
+    return voices.find((v) => v.lang.startsWith('en-US')) || voices.find((v) => v.lang.startsWith('en')) || null;
+  };
+
   const speakAboutText = () => {
     if (!('speechSynthesis' in window)) return;
     window.speechSynthesis.cancel();
 
     const utterance = new SpeechSynthesisUtterance(speechText);
-    utterance.rate = 0.96;
-    utterance.pitch = 1.05;
+    
+    // Fine-tuned for a soft, sweet, pleasant tone and comfortable conversational pace
+    utterance.rate = 0.93;
+    utterance.pitch = 1.18; // slightly higher, lighter, sweeter timbre
+    utterance.volume = 1.0;
 
-    // Try finding an English female or natural voice if available
     const voices = window.speechSynthesis.getVoices();
-    const preferredVoice = voices.find(
-      (v) => v.lang.startsWith('en') && (v.name.includes('Female') || v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Samantha') || v.name.includes('Zira'))
-    ) || voices.find((v) => v.lang.startsWith('en'));
-
-    if (preferredVoice) utterance.voice = preferredVoice;
+    const sweetVoice = getSweetFemaleVoice(voices);
+    if (sweetVoice) {
+      utterance.voice = sweetVoice;
+    }
 
     utterance.onstart = () => setIsSpeaking(true);
     utterance.onend = () => setIsSpeaking(false);
